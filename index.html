@@ -2,692 +2,1905 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="Whispers to Self - A dual-mode quote generator by Shourya Godiyal. Featuring romantic and motivational quotes, voice, music, and emotion.">
-    <meta name="keywords" content="quotes, romantic, motivational, Shourya Godiyal, whispers to self, love, inspiration, emotional quotes, quote app">
-    <meta name="author" content="Shourya Godiyal">
+  <meta charset="UTF-8" />
+  <meta name="description"
+    content="Whispers to Self - A dual-mode quote generator by Shourya Godiyal. Featuring romantic and motivational quotes, voice, music, and emotion.">
+  <meta name="keywords"
+    content="quotes, romantic, motivational, Shourya Godiyal, whispers to self, love, inspiration, emotional quotes, quote app">
+  <meta name="author" content="Shourya Godiyal">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Whispers to Self</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Raleway:wght@400;600&display=swap"
-        rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whispers to Self</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Raleway:wght@400;600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Raleway', sans-serif;
-            transition: background 1s ease;
-            padding: 20px;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
+    body {
+      font-family: 'Raleway', sans-serif;
+      transition: background 1s ease;
+      padding: 20px;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-        .container {
-            max-width: 700px;
-            margin: auto;
-            text-align: center;
-            animation: fadeIn 1.2s ease-in-out;
-            position: relative;
-            z-index: 1;
-        }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out;
+      position: relative;
+      z-index: 1;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            transition: color 0.3s ease;
-        }
+    .container:hover {
+      transform: translateY(-2px);
+    }
 
-        .mode-switch {
-            margin-bottom: 30px;
-        }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: inline-block;
+    }
 
-        .mode-switch button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(135deg, #e57373, #c62828);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
 
-        .mode-switch button:hover {
-            transform: scale(1.05);
-            background-color: #f8bbd0;
-        }
+    h1:hover::after {
+      width: 100%;
+    }
 
-        .quote-box {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: all 0.5s ease;
-        }
+    h1:hover {
+      transform: scale(1.02);
+      text-shadow: 0 2px 10px rgba(229, 115, 115, 0.3);
+    }
 
-        .quote,
-        .author {
-            transition: opacity 0.4s ease;
-        }
+    .mode-switch {
+      margin-bottom: 30px;
+    }
 
-        .quote {
-            font-size: 1.3em;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
+    .mode-switch button {
+      padding: 12px 24px;
+      margin: 0 8px;
+      border: 2px solid transparent;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      color: #666;
+      backdrop-filter: blur(10px);
+    }
 
-        .author {
-            font-family: 'Playfair Display', serif;
-            font-size: 1em;
-        }
+    .mode-switch button.active {
+      background: linear-gradient(135deg, #e57373, #c62828);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(229, 115, 115, 0.4);
+      transform: translateY(-2px);
+      position: relative;
+      overflow: hidden;
+    }
 
-        .controls button {
-            padding: 10px 18px;
-            margin: 10px 5px;
-            border: none;
-            border-radius: 16px;
-            background-color: #e57373;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .mode-switch button.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
 
-        .controls button:hover {
-            background-color: #c62828;
-            transform: scale(1.05);
-        }
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
 
-        .view-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
+    .mode-switch button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
 
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-height: 80vh;
-            overflow-y: auto;
-            width: 80%;
-            max-width: 600px;
-        }
+    .mode-switch button.active:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(229, 115, 115, 0.5);
+    }
 
-        .close-btn {
-            float: right;
-            font-weight: bold;
-            cursor: pointer;
-            color: red;
-        }
+    /* Removed mode transition effect */
 
-        .modal-content ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 20px;
-            text-align: left;
-            color: #b22222;
-        }
+    .quote-box {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      transition: all 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-        .modal-content li {
-            margin-bottom: 15px;
-            font-style: italic;
-            background-color: #fff0f0;
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
+    .quote-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.6s ease;
+    }
 
-        body.romantic {
-            background: linear-gradient(120deg, #ffe4e1, #fff1f0);
-            color: #b22222;
-        }
+    .quote-box.loading::before {
+      left: 100%;
+    }
 
-        body.motivational {
-            background: linear-gradient(135deg, #1a0000, #4a0000);
-            color: #fff;
-        }
+    .quote,
+    .author {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
 
-        body.motivational h1 {
-            color: #ffb300;
-        }
+    .quote.loading,
+    .author.loading {
+      opacity: 0.3;
+      transform: scale(0.95);
+    }
 
-        body.motivational .quote-box {
-            background: rgba(0, 0, 0, 0.4);
-            color: #fff;
-        }
+    /* Loading animation for quote generation */
+    .loading-dots {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
 
-        body.motivational .author {
-            color: #ffc107;
-        }
+    .loading-dots.show {
+      display: flex;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e57373, #c62828);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
 
-        .petals,
-        .embers {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
+    .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
-        .petal {
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background-image: url('https://cdn.jsdelivr.net/gh/miraverse-assets/blossom.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            animation: floatPetal 12s ease-in-out infinite;
-            opacity: 0.9;
-        }
+    @keyframes pulse {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
 
-        @keyframes floatPetal {
-            0% {
-                transform: translateY(-10vh) rotate(0deg);
-                opacity: 0;
-            }
+    .quote {
+      font-size: 1.3em;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
 
-            50% {
-                opacity: 1;
-            }
+    .author {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: inherit;
+      margin-top: 8px;
+    }
 
-            100% {
-                transform: translateY(110vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-        .ember {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.9), rgba(255, 0, 0, 0.3));
-            border-radius: 50%;
-            animation: rise 8s ease-in infinite;
-        }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
 
-        @keyframes rise {
-            0% {
-                transform: translateY(100vh) scale(1);
-                opacity: 0;
-            }
+    .controls button {
+      padding: 12px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 20px;
+      background-color: #e57373;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 140px;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(229, 115, 115, 0.3);
+    }
 
-            50% {
-                opacity: 1;
-            }
+    .controls button.primary {
+      background: linear-gradient(135deg, #e57373, #c62828);
+      font-size: 16px;
+      padding: 14px 24px;
+      min-width: 160px;
+      box-shadow: 0 4px 12px rgba(229, 115, 115, 0.4);
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-            100% {
-                transform: translateY(-10vh) scale(0.5);
-                opacity: 0;
-            }
-        }
-    </style>
+    .controls button.primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .controls button.primary:hover::before {
+      left: 100%;
+    }
+
+    .controls button.secondary {
+      background: rgba(229, 115, 115, 0.8);
+      font-size: 13px;
+      padding: 10px 18px;
+      min-width: 130px;
+      box-shadow: 0 2px 6px rgba(229, 115, 115, 0.2);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .controls button.secondary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .controls button.secondary:hover::before {
+      left: 100%;
+    }
+
+    .controls button:hover {
+      background-color: #c62828;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 4px 12px rgba(229, 115, 115, 0.4);
+    }
+
+    .controls button.primary:hover {
+      background: linear-gradient(135deg, #c62828, #b71c1c);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 16px rgba(229, 115, 115, 0.5);
+    }
+
+    .controls button.secondary:hover {
+      background: rgba(229, 115, 115, 0.9);
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 3px 8px rgba(229, 115, 115, 0.3);
+    }
+
+    .controls button:active {
+      transform: translateY(0) scale(0.98);
+      transition: all 0.1s ease;
+    }
+
+    /* Button click ripple effect */
+    .controls button {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .controls button .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Music and Social Controls */
+    .music-social-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .music-btn {
+      background: linear-gradient(135deg, #e57373, #c62828);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(229, 115, 115, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .music-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(229, 115, 115, 0.5);
+    }
+
+    .music-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      transform: scale(1.1) rotate(5deg);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-links a[href*="mailto"] {
+      color: #D44638;
+    }
+
+    .social-links a[href*="linkedin"] {
+      color: #0077B5;
+    }
+
+    .social-links a[href*="instagram"] {
+      color: #E4405F;
+    }
+
+    .social-links a[href*="github"] {
+      color: #333;
+    }
+
+    /* Romantic mode specific enhancements */
+    body.romantic .music-btn {
+      background: linear-gradient(135deg, #e91e63, #c2185b);
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    body.romantic .music-btn:hover {
+      background: linear-gradient(135deg, #c2185b, #ad1457);
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    body.romantic .social-links a {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(233, 30, 99, 0.2);
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.2);
+    }
+
+    body.romantic .social-links a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(233, 30, 99, 0.4);
+      box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Voice selection styling */
+    .voice-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .voice-section label {
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .voice-section select {
+      padding: 12px 16px;
+      border-radius: 20px;
+      border: 2px solid rgba(229, 115, 115, 0.3);
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      min-width: 220px;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e57373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+
+    .voice-section select:hover {
+      border-color: rgba(229, 115, 115, 0.6);
+      box-shadow: 0 2px 8px rgba(229, 115, 115, 0.2);
+    }
+
+    .voice-section select:focus {
+      outline: none;
+      border-color: #e57373;
+      box-shadow: 0 0 0 3px rgba(229, 115, 115, 0.1);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .controls button {
+        width: 100%;
+        max-width: 280px;
+        min-width: auto;
+        padding: 15px 20px;
+        font-size: 16px;
+      }
+      
+      .voice-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .voice-section select {
+        width: 100%;
+        max-width: 280px;
+      }
+      
+      h1 {
+        font-size: 2em;
+      }
+      
+      .quote {
+        font-size: 1.1em;
+      }
+    }
+
+    .view-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-height: 80vh;
+      overflow-y: auto;
+      width: 80%;
+      max-width: 600px;
+    }
+
+    .close-btn {
+      float: right;
+      font-weight: bold;
+      cursor: pointer;
+      color: red;
+    }
+
+    .modal-content ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+      text-align: left;
+      color: #b22222;
+    }
+
+    .modal-content li {
+      margin-bottom: 15px;
+      font-style: italic;
+      background-color: #fff0f0;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    body.romantic {
+      background: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 25%, #ffc0cb 50%, #ffb6c1 75%, #ffe4e1 100%);
+      color: #b22222;
+      position: relative;
+      animation: romanticGlow 8s ease-in-out infinite;
+    }
+
+    @keyframes romanticGlow {
+      0%, 100% {
+        background: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 25%, #ffc0cb 50%, #ffb6c1 75%, #ffe4e1 100%);
+      }
+      50% {
+        background: linear-gradient(135deg, #ffb6c1 0%, #ffc0cb 25%, #ffe4e1 50%, #ffc0cb 75%, #ffb6c1 100%);
+      }
+    }
+
+    body.romantic::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 154, 158, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(254, 207, 239, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 60% 60%, rgba(255, 192, 203, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+      animation: romanticShimmer 12s ease-in-out infinite;
+    }
+
+    @keyframes romanticShimmer {
+      0%, 100% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    body.motivational {
+      background: linear-gradient(135deg, #1a0000, #4a0000);
+      color: #fff;
+      position: relative;
+    }
+
+    body.motivational::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 179, 0, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 193, 7, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 140, 0, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body.romantic h1 {
+      color: #d63384;
+      text-shadow: 0 2px 10px rgba(214, 51, 132, 0.3);
+      animation: romanticTitleGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes romanticTitleGlow {
+      0%, 100% {
+        text-shadow: 0 2px 10px rgba(214, 51, 132, 0.3);
+      }
+      50% {
+        text-shadow: 0 4px 20px rgba(214, 51, 132, 0.5);
+      }
+    }
+
+    body.motivational h1 {
+      color: #ffb300;
+    }
+
+    body.romantic .quote-box {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 182, 193, 0.3);
+      box-shadow: 
+        0 8px 32px rgba(255, 182, 193, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      animation: romanticQuoteGlow 6s ease-in-out infinite;
+    }
+
+    @keyframes romanticQuoteGlow {
+      0%, 100% {
+        box-shadow: 
+          0 8px 32px rgba(255, 182, 193, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      }
+      50% {
+        box-shadow: 
+          0 12px 40px rgba(255, 182, 193, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    body.motivational .quote-box {
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+    }
+
+    body.romantic .author {
+      color: #d63384;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(214, 51, 132, 0.2);
+    }
+
+    body.romantic .controls button.primary {
+      background: linear-gradient(135deg, #e91e63, #c2185b);
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    body.romantic .controls button.primary:hover {
+      background: linear-gradient(135deg, #c2185b, #ad1457);
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.6);
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    body.romantic .controls button.secondary {
+      background: rgba(233, 30, 99, 0.8);
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.romantic .controls button.secondary:hover {
+      background: rgba(233, 30, 99, 0.9);
+      box-shadow: 0 4px 12px rgba(233, 30, 99, 0.4);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    body.motivational .author {
+      color: #ffc107;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .petals,
+    .embers {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .petal {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: radial-gradient(circle at 30% 30%, #ffb3d9, #ff69b4, #ff1493);
+      border-radius: 50% 0 50% 50%;
+      animation: floatPetal 15s ease-in-out infinite;
+      opacity: 0.9;
+      filter: drop-shadow(0 2px 4px rgba(255, 182, 193, 0.4));
+      transform-origin: center;
+    }
+
+    .petal::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 20%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+      border-radius: 50%;
+    }
+
+    @keyframes floatPetal {
+      0% {
+        transform: translateY(-10vh) translateX(-20px) rotate(0deg) scale(0.6);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.8;
+        transform: translateY(5vh) translateX(10px) rotate(45deg) scale(0.8);
+      }
+
+      30% {
+        opacity: 1;
+        transform: translateY(25vh) translateX(-15px) rotate(90deg) scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateY(45vh) translateX(20px) rotate(180deg) scale(1.1);
+      }
+
+      70% {
+        opacity: 1;
+        transform: translateY(65vh) translateX(-10px) rotate(270deg) scale(1);
+      }
+
+      90% {
+        opacity: 0.8;
+        transform: translateY(85vh) translateX(15px) rotate(315deg) scale(0.9);
+      }
+
+      100% {
+        transform: translateY(110vh) translateX(-5px) rotate(360deg) scale(0.7);
+        opacity: 0;
+      }
+    }
+
+    .ember {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 140, 0, 0.95), rgba(255, 69, 0, 0.4));
+      border-radius: 50%;
+      animation: rise 10s ease-in infinite;
+      box-shadow: 0 0 8px rgba(255, 140, 0, 0.6);
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(100vh) scale(0.8);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+        transform: translateY(80vh) scale(1.2);
+      }
+
+      80% {
+        opacity: 1;
+        transform: translateY(20vh) scale(1);
+      }
+
+      100% {
+        transform: translateY(-10vh) scale(0.6);
+        opacity: 0;
+      }
+    }
+
+    /* Social Media Section Styling */
+    .social-media-section {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 3000;
+      pointer-events: auto;
+    }
+
+    .social-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      min-width: 50px;
+    }
+
+    .social-link:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-link svg {
+      transition: transform 0.3s ease;
+    }
+
+    .social-link:hover svg {
+      transform: scale(1.1);
+    }
+
+    .social-label {
+      font-size: 10px;
+      font-weight: bold;
+      color: inherit;
+      text-align: center;
+    }
+
+    /* Social media specific colors */
+    .social-link[href*="mailto"] {
+      color: #D44638;
+    }
+
+    .social-link[href*="linkedin"] {
+      color: #0077B5;
+    }
+
+    .social-link[href*="instagram"] {
+      color: #E4405F;
+    }
+
+    .social-link[href*="github"] {
+      color: #333;
+    }
+
+    /* Mobile responsive for social media */
+    @media (max-width: 768px) {
+      .social-media-section {
+        position: fixed;
+        top: 70px;
+        right: 10px;
+        gap: 6px;
+        padding: 8px;
+      }
+      
+      .social-link {
+        min-width: 45px;
+        padding: 5px;
+      }
+      
+      .social-label {
+        font-size: 9px;
+      }
+    }
+  </style>
 </head>
 
-<body>
+  <body>
     <div class="petals" id="backgroundLayer"></div>
-    <div class="container">
-        <h1>Whispers to Self</h1>
-        <div class="mode-switch">
-            <button onclick="setMode('romantic')">Romantic</button>
-            <button onclick="setMode('motivational')">Motivational</button>
-        </div>
+  
 
-        <div class="quote-box" id="quoteBox">
-            <p class="quote" id="quote"></p>
-            <p class="author" id="author"></p>
-        </div>
-
-        <div class="controls">
-            <label for="voiceSelect" style="color: inherit; font-weight: bold; margin-right: 10px;">Select
-                Voice:</label>
-            <select id="voiceSelect" aria-label="Select voice for speech synthesis"
-                style="padding: 8px; border-radius: 8px; margin-right: 15px;"></select>
-            <button onclick="speakQuote()">Speak to Me</button>
-            <button onclick="newQuote()">New Quote</button>
-            <button onclick="saveFavourite()">Save to Favourites</button>
-            <button onclick="viewFavourites()">View Favourites</button>
-            <button onclick="clearFavourites()">Clear Favourites</button>
-            <button onclick="downloadAsImage()">Download Quote</button>
-            <button onclick="generateShareCard()">Share This Quote</button>
-            <br />
-        </div>
-
-        <!-- Single toggle button for play/pause and mute/unmute -->
-        <button id="musicToggleBtn" aria-label="Toggle Music Play and Mute" title="Toggle Music Play and Mute"
-            style="position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; border: none; background-color: #e57373; color: white; font-size: 20px; cursor: pointer; z-index: 2000;">
-        </button>
-        <style>
-            @media (max-width: 480px) {
-                #musicToggleBtn {
-                    top: 40px !important;
-                    right: 10px !important;
-                    width: 35px !important;
-                    height: 35px !important;
-                    font-size: 18px !important;
-                }
-
-                .container {
-                    padding-top: 50px !important;
-                }
-            }
-
-            /* Remove small triangle below buttons */
-            .controls br+* {
-                display: none !important;
-            }
-
-            /* Move music toggle button inside red circles on mobile */
-            @media (max-width: 480px) {
-                #musicToggleBtn {
-                    top: 25px !important;
-                    right: 5px !important;
-                }
-            }
-        </style>
-        &#9658;
-        </button>
+  
+  <div class="container">
+    <h1>Whispers to Self</h1>
+    <div class="mode-switch">
+      <button onclick="setMode('romantic')">Romantic</button>
+      <button onclick="setMode('motivational')">Motivational</button>
     </div>
 
-    <audio id="backgroundMusic" loop>
+    <div class="quote-box" id="quoteBox">
+      <p class="quote" id="quote"></p>
+      <p class="author" id="author"></p>
+      <div class="loading-dots" id="loadingDots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <!-- Voice Control Section -->
+      <div class="voice-section">
+        <label for="voiceSelect" style="color: inherit;">Select Voice:</label>
+        <select id="voiceSelect" aria-label="Select voice for speech synthesis"></select>
+        <button onclick="speakQuote()" class="primary">Speak to Me</button>
+      </div>
+
+      <!-- Quote Management Section -->
+      <div class="button-group">
+        <button onclick="newQuote()" class="primary">New Quote</button>
+        <button onclick="saveFavourite()" class="secondary">Save to Favourites</button>
+        <button onclick="viewFavourites()" class="secondary">View Favourites</button>
+        <button onclick="clearFavourites()" class="secondary">Clear Favourites</button>
+      </div>
+
+      <!-- Download & Share Section -->
+      <div class="button-group">
+        <button onclick="downloadAsImage()" class="secondary">Download Quote</button>
+        <button onclick="generateShareCard()" class="secondary">Share This Quote</button>
+        <button onclick="showQuoteOfTheDay()" class="secondary">Quote of the Day</button>
+      </div>
+
+
+
+      <!-- Music and Social Controls -->
+      <div class="music-social-controls">
+        <button id="musicToggleBtn" aria-label="Toggle Music Mute and Unmute" title="Toggle Music Mute and Unmute" class="music-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>
+            <path d="M19 12c0 2.48-1.51 4.58-3.68 5.38l1.43 1.43C19.07 17.1 21 14.69 21 12s-1.93-5.1-4.25-6.81l-1.43 1.43C17.49 7.42 19 9.52 19 12z"/>
+          </svg>
+          <span>Music</span>
+        </button>
+
+        <div class="social-links">
+          <a href="mailto:shouryagodiyal18@gmail.com" target="_blank" title="Email">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/shourya-godiyal-102460335" target="_blank" title="LinkedIn">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.5 8h4v12h-4V8zm7.5 0h3.6v1.7h.1c.5-.9 1.7-1.8 3.5-1.8 3.7 0 4.4 2.4 4.4 5.5V20h-4v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V20h-4V8z"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/shourya.godiyal" target="_blank" title="Instagram">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zm8.75 2.25a.75.75 0 110 1.5.75.75 0 010-1.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/>
+            </svg>
+          </a>
+          <a href="https://github.com/ShouryaGodiyal" target="_blank" title="GitHub">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.236 1.84 1.236 1.07 1.835 2.807 1.305 3.492.997.108-.775.418-1.305.76-1.605-2.665-.3-5.466-1.335-5.466-5.93 0-1.31.47-2.38 1.236-3.22-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.52 11.52 0 013.003-.404c1.02.005 2.045.138 3.003.404 2.29-1.552 3.296-1.23 3.296-1.23.655 1.653.243 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.807 5.625-5.48 5.92.43.37.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .32.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Audio elements moved inside body tag -->
+      <audio id="backgroundMusic" loop>
         <source src="https://www.bensound.com/bensound-music/bensound-ukulele.mp3" type="audio/mp3" />
-    </audio>
+      </audio>
+      <audio id="romanticMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3" />
+      </audio>
+      <audio id="motivationalMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-epic.mp3" type="audio/mp3" />
+      </audio>
+</body>
 
-    <div class="view-modal" id="favouritesModal" role="dialog" aria-modal="true" aria-labelledby="favouritesTitle"
-        aria-describedby="favouritesDesc" tabindex="-1">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeFavourites()" aria-label="Close favourites modal">&times;</button>
-            <h2 id="favouritesTitle">Saved Favourites</h2>
-            <ul id="favouritesList" aria-live="polite" aria-relevant="additions removals" aria-atomic="true"></ul>
-        </div>
-    </div>
+</html>
 
-    <script>
-        const romanticQuotes = [
-            { quote: "Let yourself be silently drawn by the strange pull of what you really love.", author: "Rumi" },
-            { quote: "Tumhare bina zindagi se koi shikwa to nahi.", author: "Gulzar" },
-            { quote: "I wish you to know that you have been the last dream of my soul.", author: "Charles Dickens" },
-            { quote: "Main tumhe bhool jaun yeh ho nahi sakta.", author: "Jaun Elia" },
-            { quote: "Love looks not with the eyes, but with the mind.", author: "Shakespeare" },
-            { quote: "I saw that you were perfect, and so I loved you.", author: "Angelita Lim" },
-            { quote: "You are the poem I never knew how to write.", author: "Atticus" },
-            { quote: "Kisi ko chahna, phir use khona, aur phir bhi usi ko chahna... mohabbat hai.", author: "Unknown" },
-            { quote: "In your smile, I see something more beautiful than stars.", author: "Beth Revis" },
-            { quote: "I would rather spend one lifetime with you than face all the ages of this world alone.", author: "J.R.R. Tolkien" },
-            { quote: "Tum aa gaye ho, noor aa gaya hai.", author: "Gulzar" },
-            { quote: "I crave a love so deep the ocean would be jealous.", author: "Unknown" },
-            { quote: "Tere bina jee na paayein hum.", author: "Javed Akhtar" },
-            { quote: "You have me. Until every last star in the galaxy dies.", author: "Amie Kaufman" },
-            { quote: "Tumhari muskurahatein meri taqdeer ban jayein.", author: "Unknown" },
-            { quote: "Even after all this time, the sun never says to the earth, 'You owe me.'", author: "Hafiz" },
-            { quote: "Main likh ke tujhe mita bhi doon, teri yaadein phir bhi reh jaati hain.", author: "Jaun Elia" },
-            { quote: "You’re my favorite place to go when my mind searches for peace.", author: "Unknown" },
-            { quote: "Tere jaane ka asar kuch aisa hua mujh par, tujhe dhoondhte dhoondhte main khud kho gaya.", author: "Unknown" },
-            { quote: "I loved her not for the way she danced with my angels, but for the way the sound of her name could silence my demons.", author: "Christopher Poindexter" },
-            { quote: "Tumse milke aisa laga tumse milke armaan hue poore dil ke.", author: "Sameer Anjaan" },
-            { quote: "I fell in love the way you fall asleep: slowly, and then all at once.", author: "John Green" },
-            { quote: "Itni shiddat se maine tumhe paane ki koshish ki hai...", author: "Om Shanti Om" },
-            { quote: "You are my heart, my life, my one and only thought.", author: "Arthur Conan Doyle" },
-            { quote: "Hum tere bin ab reh nahi sakte, tere bina kya wajood mera.", author: "Rashmi Singh" }
-        ];
+<div class="view-modal" id="favouritesModal" role="dialog" aria-modal="true" aria-labelledby="favouritesTitle"
+  aria-describedby="favouritesDesc" tabindex="-1">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeFavourites()" aria-label="Close favourites modal">&times;</button>
+    <h2 id="favouritesTitle">Saved Favourites</h2>
+    <ul id="favouritesList" aria-live="polite" aria-relevant="additions removals" aria-atomic="true"></ul>
+  </div>
+</div>
 
-        // Populate voice select dropdown
-        const voiceSelect = document.getElementById('voiceSelect');
-        let voices = [];
+<script>
+  const romanticQuotes = [
+    { quote: "Let yourself be silently drawn by the strange pull of what you really love.", author: "Rumi" },
+    { quote: "Tumhare bina zindagi se koi shikwa to nahi.", author: "Gulzar" },
+    { quote: "I wish you to know that you have been the last dream of my soul.", author: "Charles Dickens" },
+    { quote: "Main tumhe bhool jaun yeh ho nahi sakta.", author: "Jaun Elia" },
+    { quote: "Love looks not with the eyes, but with the mind.", author: "Shakespeare" },
+    { quote: "I saw that you were perfect, and so I loved you.", author: "Angelita Lim" },
+    { quote: "You are the poem I never knew how to write.", author: "Atticus" },
+    { quote: "Kisi ko chahna, phir use khona, aur phir bhi usi ko chahna... mohabbat hai.", author: "Unknown" },
+    { quote: "In your smile, I see something more beautiful than stars.", author: "Beth Revis" },
+    { quote: "I would rather spend one lifetime with you than face all the ages of this world alone.", author: "J.R.R. Tolkien" },
+    { quote: "Tum aa gaye ho, noor aa gaya hai.", author: "Gulzar" },
+    { quote: "I crave a love so deep the ocean would be jealous.", author: "Unknown" },
+    { quote: "Tere bina jee na paayein hum.", author: "Javed Akhtar" },
+    { quote: "You have me. Until every last star in the galaxy dies.", author: "Amie Kaufman" },
+    { quote: "Tumhari muskurahatein meri taqdeer ban jayein.", author: "Unknown" },
+    { quote: "Even after all this time, the sun never says to the earth, 'You owe me.'", author: "Hafiz" },
+    { quote: "Main likh ke tujhe mita bhi doon, teri yaadein phir bhi reh jaati hain.", author: "Jaun Elia" },
+    { quote: "You’re my favorite place to go when my mind searches for peace.", author: "Unknown" },
+    { quote: "Tere jaane ka asar kuch aisa hua mujh par, tujhe dhoondhte dhoondhte main khud kho gaya.", author: "Unknown" },
+    { quote: "I loved her not for the way she danced with my angels, but for the way the sound of her name could silence my demons.", author: "Christopher Poindexter" },
+    { quote: "Tumse milke aisa laga tumse milke armaan hue poore dil ke.", author: "Sameer Anjaan" },
+    { quote: "I fell in love the way you fall asleep: slowly, and then all at once.", author: "John Green" },
+    { quote: "Itni shiddat se maine tumhe paane ki koshish ki hai...", author: "Om Shanti Om" },
+    { quote: "You are my heart, my life, my one and only thought.", author: "Arthur Conan Doyle" },
+    { quote: "Hum tere bin ab reh nahi sakte, tere bina kya wajood mera.", author: "Rashmi Singh" },
+    { quote: "I have waited for this opportunity for more than half a century, to repeat to you once again my vow of eternal fidelity and everlasting love.", author: "Gabriel García Márquez" },
+    { quote: "Tere bina zindagi mein koi kami nahi, sirf tu hi nahi hai.", author: "Unknown" },
+    { quote: "You don’t love someone for their looks or their clothes — you love them because they sing a song only you can hear.", author: "Oscar Wilde" },
+    { quote: "Tum mere paas hote ho goya, jab koi doosra nahi hota.", author: "Nida Fazli" },
+    { quote: "My love for you is a journey, starting at forever and ending at never.", author: "Unknown" },
+    { quote: "Tujh mein rab dikhta hai, yaara main kya karoon.", author: "Sameer Anjaan" },
+    { quote: "I want to do with you what spring does with the cherry trees.", author: "Pablo Neruda" },
+    { quote: "I swear I couldn't love you more than I do right now, and yet I know I will tomorrow.", author: "Leo Christopher" },
+    { quote: "Mohabbat karna toh har kisi ke bas ki baat nahi, jigar chahiye apni hi khushi ke khilaf jaane ke liye.", author: "Unknown" },
+    { quote: "He stepped down, trying not to look long at her, as if she were the sun.", author: "Leo Tolstoy" },
+    { quote: "Kabhi kabhi dil chahta hai waqt thoda ruk jaaye, bas tere saath rehne ke liye.", author: "Unknown" },
+    { quote: "You have bewitched me, body and soul, and I love, I love, I love you.", author: "Jane Austen" },
+    { quote: "Kisi roz tumse yunhi mil jaayenge, socha na tha.", author: "Unknown" },
+    { quote: "You are the one girl that made me risk everything for a future worth having.", author: "Simone Elkeles" },
+    { quote: "Agar tum saath ho, toh kuch bhi adhura nahi lagta.", author: "Unknown" },
+    { quote: "The best love is the kind that awakens the soul and makes us reach for more.", author: "Nicholas Sparks" },
+    { quote: "Tere naam se meri har dhadkan hai, tu har dua ka armaan hai.", author: "Unknown" },
+    { quote: "You are my today and all of my tomorrows.", author: "Leo Christopher" },
+    { quote: "Tumhari har baat mein ek baat hai jo sab se alag hai.", author: "Unknown" },
+    { quote: "When I saw you, I fell in love, and you smiled because you knew.", author: "Arrigo Boito" },
+    { quote: "You are every reason, every hope, and every dream I've ever had.", author: "Nicholas Sparks" },
+    { quote: "Na jaane kyun, tumhe dekhte hi dil sambhalta nahi.", author: "Unknown" },
+    { quote: "To love and be loved is to feel the sun from both sides.", author: "David Viscott" }
+  ];
 
-        function populateVoiceList() {
-            voices = window.speechSynthesis.getVoices();
-            voiceSelect.innerHTML = '';
-            voices.forEach((voice, index) => {
-                const option = document.createElement('option');
-                option.textContent = `${voice.name} (${voice.lang})`;
-                option.value = index;
-                voiceSelect.appendChild(option);
-            });
-        }
+  // Populate voice select dropdown
+  const voiceSelect = document.getElementById('voiceSelect');
+  let voices = [];
 
-        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = populateVoiceList;
+  function populateVoiceList() {
+    try {
+      voices = window.speechSynthesis.getVoices();
+      voiceSelect.innerHTML = '';
+      
+      if (voices.length === 0) {
+        const option = document.createElement('option');
+        option.textContent = 'Loading voices...';
+        option.value = '';
+        voiceSelect.appendChild(option);
+        return;
+      }
+      
+      voices.forEach((voice, index) => {
+        const option = document.createElement('option');
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.value = index;
+        voiceSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error('Error populating voice list:', error);
+      const option = document.createElement('option');
+      option.textContent = 'Voice not available';
+      option.value = '';
+      voiceSelect.appendChild(option);
+    }
+  }
+
+  // Cross-browser compatibility for speech synthesis
+  if (typeof speechSynthesis !== 'undefined') {
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoiceList;
+    } else {
+      // Fallback for browsers that don't support onvoiceschanged
+      setTimeout(populateVoiceList, 1000);
+    }
+  } else {
+    console.warn('Speech synthesis not supported in this browser');
+  }
+
+  // Also call populateVoiceList on window load to ensure voices are loaded
+  window.addEventListener('load', () => {
+    populateVoiceList();
+  });
+
+  const motivationalQuotes = [
+    { quote: "Don’t watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+    { quote: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+    { quote: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+    { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { quote: "Your limitation—it’s only your imagination.", author: "Unknown" },
+    { quote: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" },
+    { quote: "Success doesn’t come to you. You go to it.", author: "Marva Collins" },
+    { quote: "Great things never come from comfort zones.", author: "Neil Strauss" },
+    { quote: "Be stronger than your strongest excuse.", author: "Unknown" },
+    { quote: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
+    { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { quote: "Khud ko kar buland itna ke har taqdeer se pehle, khuda bande se khud pooche — bata teri raza kya hai.", author: "Allama Iqbal" },
+    { quote: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau" },
+    { quote: "Stars can’t shine without darkness.", author: "Unknown" },
+    { quote: "Don’t limit your challenges. Challenge your limits.", author: "Jerry Dunn" },
+    { quote: "Waqt lagta hai par sab kuch theek ho jaata hai.", author: "Unknown" },
+    { quote: "Fall seven times, stand up eight.", author: "Japanese Proverb" },
+    { quote: "You don’t have to be extreme, just consistent.", author: "Unknown" },
+    { quote: "If it’s both terrifying and amazing then you should definitely pursue it.", author: "Erada" },
+    { quote: "Jab tak todenge nahi, tab tak chhodenge nahi.", author: "Sandeep Maheshwari" },
+    { quote: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" },
+    { quote: "Kamyabi ke peechhe mat bhaago. Excellence ka picha karo, success jhak maar ke piche aayegi.", author: "3 Idiots" },
+    { quote: "You are allowed to be both a masterpiece and a work in progress.", author: "Sophia Bush" },
+    { quote: "Everything you want is on the other side of fear.", author: "Jack Canfield" },
+    { quote: "Pain is temporary. Quitting lasts forever.", author: "Lance Armstrong" },
+    { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+    { quote: "Jitna bada sapna hoga, utni badi takleef hogi, lekin akhir mein sab kuch milega.", author: "Unknown" },
+    { quote: "Dream big and dare to fail.", author: "Norman Vaughan" },
+    { quote: "You are more powerful than you know and they fear the day you discover it.", author: "Unknown" },
+    { quote: "Darr ke aage jeet hai.", author: "Mountain Dew" },
+    { quote: "What lies behind us and what lies before us are tiny matters compared to what lies within us.", author: "Ralph Waldo Emerson" },
+    { quote: "Zindagi mein haar tab hoti hai jab hum koshish karna chhod dete hain.", author: "Unknown" },
+    { quote: "Courage doesn’t always roar. Sometimes courage is the quiet voice at the end of the day saying 'I will try again tomorrow.'", author: "Mary Anne Radmacher" },
+    { quote: "Don’t wait for opportunity. Create it.", author: "Unknown" },
+    { quote: "It's not whether you get knocked down, it's whether you get up.", author: "Vince Lombardi" },
+    { quote: "Tough times never last, but tough people do.", author: "Robert H. Schuller" },
+    { quote: "The man who moves a mountain begins by carrying away small stones.", author: "Confucius" },
+    { quote: "Jab tak thakoge nahi, tab tak badloge nahi.", author: "Unknown" },
+    { quote: "Success is walking from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+    { quote: "Zameen par baith kar kyun aasman dekhna, udh jaa na, tere bhi hain par!", author: "Unknown" },
+    { quote: "Act as if what you do makes a difference. It does.", author: "William James" },
+    { quote: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+    { quote: "Rise above the storm and you will find the sunshine.", author: "Mario Fernandez" },
+    { quote: "Kaamyabi milti hai jab irade mazboot hote hain.", author: "Unknown" },
+    { quote: "Keep your eyes on the stars, and your feet on the ground.", author: "Theodore Roosevelt" },
+    { quote: "Every strike brings me closer to the next home run.", author: "Babe Ruth" },
+    { quote: "If you're going through hell, keep going.", author: "Winston Churchill" },
+    { quote: "You have to be at your strongest when you’re feeling at your weakest.", author: "Unknown" }
+  ];
+
+
+  let currentMode = 'romantic';
+
+  function newQuote() {
+    const quoteEl = document.getElementById('quote');
+    const authorEl = document.getElementById('author');
+    const quoteBox = document.getElementById('quoteBox');
+    const loadingDots = document.getElementById('loadingDots');
+    
+    // Show loading state
+    quoteEl.classList.add('loading');
+    authorEl.classList.add('loading');
+    quoteBox.classList.add('loading');
+    loadingDots.classList.add('show');
+    
+    // Simulate loading time for better UX
+    setTimeout(() => {
+      const quoteData = currentMode === 'romantic'
+        ? romanticQuotes[Math.floor(Math.random() * romanticQuotes.length)]
+        : motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+      
+      // Hide loading state
+      loadingDots.classList.remove('show');
+      quoteBox.classList.remove('loading');
+      
+      // Animate quote appearance
+      quoteEl.textContent = `"${quoteData.quote}"`;
+      authorEl.innerHTML = `— <em>${quoteData.author}</em>`;
+      
+      quoteEl.classList.remove('loading');
+      authorEl.classList.remove('loading');
+      
+      // Add subtle bounce effect
+      quoteEl.style.animation = 'fadeIn 0.6s ease-out';
+      authorEl.style.animation = 'fadeIn 0.6s ease-out 0.1s';
+      
+      setTimeout(() => {
+        quoteEl.style.animation = '';
+        authorEl.style.animation = '';
+      }, 600);
+    }, 800);
+  }
+
+  function speakQuote() {
+    try {
+      const quoteText = document.getElementById('quote').textContent;
+      const authorText = document.getElementById('author').textContent;
+      console.log('speakQuote called with:', quoteText, authorText);
+      
+      if (!('speechSynthesis' in window)) {
+        alert('Sorry, your browser does not support speech synthesis.');
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(`${quoteText} ${authorText}`);
+
+      // Function to detect if text contains Urdu or Hindi characters
+      function containsUrduHindi(text) {
+        const urduHindiRegex = /[\u0600-\u06FF\u0900-\u097F]/;
+        return urduHindiRegex.test(text);
+      }
+
+      const voices = window.speechSynthesis.getVoices();
+      console.log('Available voices:', voices);
+      
+      if (voices.length === 0) {
+        alert('No voices available. Please try again in a moment.');
+        return;
+      }
+
+      const selectedVoiceIndex = voiceSelect.value;
+      const selectedVoice = voices[selectedVoiceIndex];
+      console.log('Selected voice:', selectedVoice);
+
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      } else {
+        if (containsUrduHindi(quoteText + authorText)) {
+          // Try to find Urdu or Hindi voice
+          const urduVoice = voices.find(v => v.lang.startsWith('ur'));
+          const hindiVoice = voices.find(v => v.lang.startsWith('hi'));
+          if (urduVoice) {
+            utterance.voice = urduVoice;
+          } else if (hindiVoice) {
+            utterance.voice = hindiVoice;
+          } else {
+            // fallback to English voice
+            const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
+            if (englishVoices.length > 0) {
+              const preferredVoice = englishVoices.find(v => v.lang === 'en-US') || englishVoices.find(v => v.lang === 'en-GB') || englishVoices[0];
+              utterance.voice = preferredVoice;
+            }
+          }
         } else {
-            populateVoiceList();
+          // English voice selection
+          const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
+          if (englishVoices.length > 0) {
+            const preferredVoice = englishVoices.find(v => v.lang === 'en-US') || englishVoices.find(v => v.lang === 'en-GB') || englishVoices[0];
+            utterance.voice = preferredVoice;
+          }
         }
+      }
 
-        // Also call populateVoiceList on window load to ensure voices are loaded
-        window.addEventListener('load', () => {
-            populateVoiceList();
+      utterance.rate = 1; // Normal rate
+      utterance.pitch = 1; // Normal pitch
+
+      // Add error handling for speech synthesis
+      utterance.onerror = function(event) {
+        console.error('Speech synthesis error:', event);
+        alert('Sorry, there was an error with speech synthesis. Please try again.');
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error('Error in speakQuote:', error);
+      alert('Sorry, there was an error. Please try again.');
+    }
+  }
+
+  let audioAllowed = false;
+  let isMuted = false;
+
+  function enableAudio() {
+    // Remove enableAudio function as it is no longer needed
+  }
+
+  // Remove unused playMusic and pauseMusic functions
+
+  // New combined toggle button logic
+  let musicPlaying = false;
+  let musicMuted = false;
+
+  // Delay initialization of musicToggleBtn and audio element until DOM is loaded
+  window.addEventListener('DOMContentLoaded', () => {
+    const musicToggleBtn = document.getElementById('musicToggleBtn');
+    const romanticMusic = document.getElementById('romanticMusic');
+    const motivationalMusic = document.getElementById('motivationalMusic');
+
+    let currentMusic = null;
+    let isMuted = false;
+    let musicStarted = false;
+
+    function updateMusicToggleBtn() {
+      const musicToggleBtn = document.getElementById('musicToggleBtn');
+      const icon = musicToggleBtn.querySelector('svg');
+      const text = musicToggleBtn.querySelector('span');
+      
+      if (isMuted) {
+        icon.innerHTML = `
+          <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+          <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/>
+        `;
+        text.textContent = 'Unmute';
+        musicToggleBtn.title = 'Unmute Music';
+        musicToggleBtn.style.background = 'linear-gradient(135deg, #757575, #424242)';
+      } else {
+        icon.innerHTML = `
+          <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+          <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>
+          <path d="M19 12c0 2.48-1.51 4.58-3.68 5.38l1.43 1.43C19.07 17.1 21 14.69 21 12s-1.93-5.1-4.25-6.81l-1.43 1.43C17.49 7.42 19 9.52 19 12z"/>
+        `;
+        text.textContent = 'Music';
+        musicToggleBtn.title = 'Mute Music';
+        musicToggleBtn.style.background = 'linear-gradient(135deg, #ff6f61, #d84315)';
+      }
+    }
+
+    function toggleMute() {
+      try {
+        if (!currentMusic) {
+          console.warn('No music element available');
+          return;
+        }
+        isMuted = !isMuted;
+        currentMusic.muted = isMuted;
+        updateMusicToggleBtn();
+      } catch (error) {
+        console.error('Error toggling music:', error);
+        alert('Sorry, there was an error with the music. Please try again.');
+      }
+    }
+
+    musicToggleBtn.addEventListener('click', () => {
+      try {
+        // If music hasn't started yet (due to browser restrictions), start it
+        if (!musicStarted || (currentMusic && currentMusic.paused)) {
+          startMusic();
+        }
+        // Always toggle mute/unmute
+        toggleMute();
+      } catch (error) {
+        console.error('Error handling music button click:', error);
+        alert('Sorry, there was an error. Please try again.');
+      }
+    });
+
+    // Initialize button state
+    updateMusicToggleBtn();
+
+    // Music button positioning no longer needed - integrated into main layout
+
+    // Start playing music based on current mode with smooth transition
+    function playMusicForMode(mode) {
+      const previousMusic = currentMusic;
+      
+      if (mode === 'romantic') {
+        currentMusic = romanticMusic;
+      } else if (mode === 'motivational') {
+        currentMusic = motivationalMusic;
+      }
+      
+      if (currentMusic && musicStarted) {
+        // Smooth transition: fade out previous music, fade in new music
+        if (previousMusic && previousMusic !== currentMusic) {
+          // Fade out previous music
+          let volume = 1;
+          const fadeOut = setInterval(() => {
+            volume -= 0.1;
+            if (volume <= 0) {
+              previousMusic.pause();
+              previousMusic.volume = 1;
+              clearInterval(fadeOut);
+              
+              // Start new music with fade in
+              currentMusic.volume = 0;
+              currentMusic.muted = isMuted;
+              currentMusic.play().catch(e => {
+                console.warn('Music play prevented:', e);
+              });
+              
+              let newVolume = 0;
+              const fadeIn = setInterval(() => {
+                newVolume += 0.1;
+                if (newVolume >= 1) {
+                  currentMusic.volume = 1;
+                  clearInterval(fadeIn);
+                } else {
+                  currentMusic.volume = newVolume;
+                }
+              }, 50);
+            } else {
+              previousMusic.volume = volume;
+            }
+          }, 50);
+        } else {
+          // Direct play for first time or same music
+          currentMusic.muted = isMuted;
+          currentMusic.play().catch(e => {
+            console.warn('Music play prevented:', e);
+          });
+        }
+      }
+    }
+
+    // Start music playback after user interaction
+    function startMusic() {
+      try {
+        musicStarted = true;
+        if (currentMusic) {
+          currentMusic.play().then(() => {
+            console.log('Music started successfully');
+            // Remove any music hints if they exist
+            const hints = document.querySelectorAll('[style*="music"]');
+            hints.forEach(hint => hint.remove());
+          }).catch(e => {
+            console.warn('Music play prevented:', e);
+            // Don't show alert, just log the error
+          });
+        }
+      } catch (error) {
+        console.error('Error starting music:', error);
+        // Don't show alert, just log the error
+      }
+    }
+
+    // Expose playMusicForMode globally for setMode to call
+    window.playMusicForMode = playMusicForMode;
+
+    // Initialize romantic music on page load
+    function initializeRomanticMusic() {
+      currentMusic = romanticMusic;
+      musicStarted = true;
+      isMuted = false;
+      
+      // Set up multiple event listeners to catch the first user interaction
+      const startMusicOnInteraction = () => {
+        if (currentMusic && !currentMusic.playing) {
+          currentMusic.play().then(() => {
+            console.log('Romantic music started successfully');
+          }).catch(e => {
+            console.warn('Music play failed:', e);
+          });
+        }
+        // Remove all listeners after first successful interaction
+        document.removeEventListener('click', startMusicOnInteraction);
+        document.removeEventListener('keydown', startMusicOnInteraction);
+        document.removeEventListener('touchstart', startMusicOnInteraction);
+        document.removeEventListener('mousedown', startMusicOnInteraction);
+      };
+      
+      // Try to start romantic music immediately
+      if (currentMusic) {
+        currentMusic.play().then(() => {
+          console.log('Romantic music autoplay successful');
+        }).catch(e => {
+          console.warn('Auto-play prevented, waiting for user interaction:', e);
+          // If auto-play is blocked, wait for ANY user interaction
+          document.addEventListener('click', startMusicOnInteraction, { once: true });
+          document.addEventListener('keydown', startMusicOnInteraction, { once: true });
+          document.addEventListener('touchstart', startMusicOnInteraction, { once: true });
+          document.addEventListener('mousedown', startMusicOnInteraction, { once: true });
         });
+      }
+      
+      updateMusicToggleBtn();
+    }
 
-        const motivationalQuotes = [
-            { quote: "Don’t watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
-            { quote: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
-            { quote: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
-            { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
-            { quote: "Your limitation—it’s only your imagination.", author: "Unknown" },
-            { quote: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" },
-            { quote: "Success doesn’t come to you. You go to it.", author: "Marva Collins" },
-            { quote: "Great things never come from comfort zones.", author: "Neil Strauss" },
-            { quote: "Be stronger than your strongest excuse.", author: "Unknown" },
-            { quote: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
-            { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-            { quote: "Khud ko kar buland itna ke har taqdeer se pehle, khuda bande se khud pooche — bata teri raza kya hai.", author: "Allama Iqbal" },
-            { quote: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau" },
-            { quote: "Stars can’t shine without darkness.", author: "Unknown" },
-            { quote: "Don’t limit your challenges. Challenge your limits.", author: "Jerry Dunn" },
-            { quote: "Waqt lagta hai par sab kuch theek ho jaata hai.", author: "Unknown" },
-            { quote: "Fall seven times, stand up eight.", author: "Japanese Proverb" },
-            { quote: "You don’t have to be extreme, just consistent.", author: "Unknown" },
-            { quote: "If it’s both terrifying and amazing then you should definitely pursue it.", author: "Erada" },
-            { quote: "Jab tak todenge nahi, tab tak chhodenge nahi.", author: "Sandeep Maheshwari" },
-            { quote: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" },
-            { quote: "Kamyabi ke peechhe mat bhaago. Excellence ka picha karo, success jhak maar ke piche aayegi.", author: "3 Idiots" },
-            { quote: "You are allowed to be both a masterpiece and a work in progress.", author: "Sophia Bush" },
-            { quote: "Everything you want is on the other side of fear.", author: "Jack Canfield" },
-            { quote: "Pain is temporary. Quitting lasts forever.", author: "Lance Armstrong" }
-        ];
+    // Start romantic music when page loads
+    initializeRomanticMusic();
+    
+    // Load initial romantic quote
+    setTimeout(() => {
+      newQuote();
+    }, 100);
+    
+    // Add a subtle hint for music autoplay
+    const musicHint = document.createElement('div');
+    musicHint.innerHTML = '🎵 Click anywhere to start music';
+    musicHint.style.cssText = `
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(233, 30, 99, 0.9);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    `;
+    document.body.appendChild(musicHint);
+    
+    // Show hint if music hasn't started after 2 seconds
+    setTimeout(() => {
+      if (currentMusic && currentMusic.paused) {
+        musicHint.style.opacity = '1';
+        // Hide hint after 5 seconds
+        setTimeout(() => {
+          musicHint.style.opacity = '0';
+          setTimeout(() => musicHint.remove(), 300);
+        }, 5000);
+      } else {
+        musicHint.remove();
+      }
+    }, 2000);
+  });
 
+  // Fix: Update quote of the day modal content when mode changes
+  function updateQuoteOfTheDay() {
+    const dateStr = getCurrentISTDate();
+    const index = getQuoteOfTheDayIndex(dateStr);
+    const quoteData = allQuotes[index];
+    const modalQuoteText = document.getElementById('quoteOfDayText');
+    const modalAuthorText = document.getElementById('quoteOfDayAuthor');
+    if (modalQuoteText && modalAuthorText) {
+      modalQuoteText.textContent = `"${quoteData.quote}"`;
+      modalAuthorText.textContent = `— ${quoteData.author}`;
+    }
+  }
 
-        let currentMode = 'romantic';
+  // Listen for mode changes to update quote of the day modal content
+  const romanticBtn = document.querySelector('.mode-switch button[onclick="setMode(\'romantic\')"]');
+  const motivationalBtn = document.querySelector('.mode-switch button[onclick="setMode(\'motivational\')"]');
+  if (romanticBtn) {
+    romanticBtn.addEventListener('click', () => {
+      updateQuoteOfTheDay();
+    });
+  }
+  if (motivationalBtn) {
+    motivationalBtn.addEventListener('click', () => {
+      updateQuoteOfTheDay();
+    });
+  }
 
-        function newQuote() {
-            const quoteData = currentMode === 'romantic'
-                ? romanticQuotes[Math.floor(Math.random() * romanticQuotes.length)]
-                : motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-            const quoteEl = document.getElementById('quote');
-            const authorEl = document.getElementById('author');
-            quoteEl.style.opacity = 0;
-            authorEl.style.opacity = 0;
-            setTimeout(() => {
-                quoteEl.textContent = `"${quoteData.quote}"`;
-                authorEl.innerHTML = `— <em>${quoteData.author}</em>`;
-                quoteEl.style.opacity = 1;
-                authorEl.style.opacity = 1;
-            }, 300);
+  // Ensure social media links are visible and styled
+  const socialMediaLinks = document.getElementById('socialMediaLinks');
+  if (socialMediaLinks) {
+    socialMediaLinks.style.position = 'fixed';
+    socialMediaLinks.style.bottom = '100px';
+    socialMediaLinks.style.left = '50%';
+    socialMediaLinks.style.transform = 'translateX(-50%)';
+    socialMediaLinks.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    socialMediaLinks.style.padding = '10px 20px';
+    socialMediaLinks.style.borderRadius = '30px';
+    socialMediaLinks.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+    socialMediaLinks.style.zIndex = '2500';
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.body.className = mode;
+    
+    // Update mode button styling
+    const romanticBtn = document.querySelector('.mode-switch button[onclick="setMode(\'romantic\')"]');
+    const motivationalBtn = document.querySelector('.mode-switch button[onclick="setMode(\'motivational\')"]');
+    
+    if (romanticBtn && motivationalBtn) {
+      romanticBtn.classList.remove('active');
+      motivationalBtn.classList.remove('active');
+      
+      if (mode === 'romantic') {
+        romanticBtn.classList.add('active');
+      } else {
+        motivationalBtn.classList.add('active');
+      }
+    }
+    
+    const background = document.getElementById('backgroundLayer');
+    background.innerHTML = mode === 'romantic' ? generatePetals() : generateEmbers();
+
+    // Play corresponding background music using new global function
+    if (window.playMusicForMode) {
+      window.playMusicForMode(mode);
+    }
+
+    newQuote();
+  }
+
+  // Add event listener to enable audio on first user interaction
+  window.addEventListener('click', enableAudio, { once: true });
+  window.addEventListener('keydown', enableAudio, { once: true });
+
+  function generatePetals() {
+    let petals = '';
+    for (let i = 0; i < 45; i++) {
+      const left = Math.random() * 100;
+      const delay = Math.random() * 15;
+      const size = 20 + Math.random() * 15;
+      const duration = 12 + Math.random() * 8;
+      const hue = 320 + Math.random() * 40; // Pink to purple variations
+      const saturation = 70 + Math.random() * 30;
+      const lightness = 70 + Math.random() * 20;
+      
+      petals += `<div class='petal' style='
+        left:${left}%; 
+        animation-delay:${delay}s; 
+        animation-duration:${duration}s;
+        width:${size}px; 
+        height:${size}px;
+        background: radial-gradient(circle at 30% 30%, hsl(${hue}, ${saturation}%, ${lightness}%), hsl(${hue-20}, ${saturation-10}%, ${lightness-10}%), hsl(${hue-40}, ${saturation-20}%, ${lightness-20}%));
+        filter: drop-shadow(0 2px 4px hsla(${hue}, ${saturation}%, ${lightness}%, 0.4));
+      '></div>`;
+    }
+    return petals;
+  }
+
+  function generateEmbers() {
+    let embers = '';
+    for (let i = 0; i < 30; i++) {
+      const left = Math.random() * 100;
+      const delay = Math.random() * 10;
+      embers += `<div class='ember' style='left:${left}%; animation-delay:${delay}s;'></div>`;
+    }
+    return embers;
+  }
+
+  function saveFavourite() {
+    const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
+    const newFav = { quote: document.getElementById('quote').textContent, author: document.getElementById('author').textContent };
+    favs.push(newFav);
+    localStorage.setItem('favourites', JSON.stringify(favs));
+    alert('Saved to favourites!');
+  }
+
+  function viewFavourites() {
+    const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
+    const list = document.getElementById('favouritesList');
+    list.innerHTML = '';
+    if (favs.length === 0) {
+      list.innerHTML = '<li>No favourites saved yet.</li>';
+    } else {
+      favs.forEach(f => {
+        const li = document.createElement('li');
+        li.innerHTML = `${f.quote} <br><strong>${f.author}</strong>`;
+        list.appendChild(li);
+      });
+    }
+    document.getElementById('favouritesModal').style.display = 'flex';
+    trapFocus(document.getElementById('favouritesModal'));
+  }
+
+  function closeFavourites() {
+    document.getElementById('favouritesModal').style.display = 'none';
+  }
+
+  function clearFavourites() {
+    if (confirm("Are you sure you want to delete all saved quotes?")) {
+      localStorage.removeItem('favourites');
+      alert('All favourites cleared.');
+    }
+  }
+
+  // Accessibility: Focus management and keyboard navigation for modal
+  let lastFocusedElement;
+
+  function trapFocus(element) {
+    const focusableElements = element.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    element.addEventListener('keydown', function (e) {
+      const isTabPressed = (e.key === 'Tab' || e.keyCode === 9);
+
+      if (!isTabPressed) {
+        return;
+      }
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          lastFocusable.focus();
+          e.preventDefault();
         }
-
-        function speakQuote() {
-            const quoteText = document.getElementById('quote').textContent;
-            const authorText = document.getElementById('author').textContent;
-            console.log('speakQuote called with:', quoteText, authorText);
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(`${quoteText} ${authorText}`);
-
-                // Function to detect if text contains Urdu or Hindi characters
-                function containsUrduHindi(text) {
-                    const urduHindiRegex = /[\u0600-\u06FF\u0900-\u097F]/;
-                    return urduHindiRegex.test(text);
-                }
-
-                const voices = window.speechSynthesis.getVoices();
-                console.log('Available voices:', voices);
-                const selectedVoiceIndex = voiceSelect.value;
-                const selectedVoice = voices[selectedVoiceIndex];
-                console.log('Selected voice:', selectedVoice);
-
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                } else {
-                    if (containsUrduHindi(quoteText + authorText)) {
-                        // Try to find Urdu or Hindi voice
-                        const urduVoice = voices.find(v => v.lang.startsWith('ur'));
-                        const hindiVoice = voices.find(v => v.lang.startsWith('hi'));
-                        if (urduVoice) {
-                            utterance.voice = urduVoice;
-                        } else if (hindiVoice) {
-                            utterance.voice = hindiVoice;
-                        } else {
-                            // fallback to English voice
-                            const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
-                            if (englishVoices.length > 0) {
-                                const preferredVoice = englishVoices.find(v => v.lang === 'en-US') || englishVoices.find(v => v.lang === 'en-GB') || englishVoices[0];
-                                utterance.voice = preferredVoice;
-                            }
-                        }
-                    } else {
-                        // English voice selection
-                        const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
-                        if (englishVoices.length > 0) {
-                            const preferredVoice = englishVoices.find(v => v.lang === 'en-US') || englishVoices.find(v => v.lang === 'en-GB') || englishVoices[0];
-                            utterance.voice = preferredVoice;
-                        }
-                    }
-                }
-
-                utterance.rate = 1; // Normal rate
-                utterance.pitch = 1; // Normal pitch
-
-                window.speechSynthesis.speak(utterance);
-            } else {
-                alert('Sorry, your browser does not support speech synthesis.');
-            }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          firstFocusable.focus();
+          e.preventDefault();
         }
+      }
+    });
+  }
 
-        let audioAllowed = false;
-        let isMuted = false;
+  function downloadAsImage() {
+    html2canvas(document.getElementById('quoteBox')).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'quote.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
 
-        function enableAudio() {
-            // Remove enableAudio function as it is no longer needed
-        }
+  function generateShareCard() {
+    const text = `${document.getElementById('quote').textContent} ${document.getElementById('author').textContent}`;
+    if (navigator.share) {
+      navigator.share({ text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('Quote copied to clipboard!');
+    }
+  }
 
-        // Remove unused playMusic and pauseMusic functions
+  window.onload = () => setMode('romantic');
 
-        // New combined toggle button logic
-        let musicPlaying = false;
-        let musicMuted = false;
+  // Removed accessibility and modal related code for favourites feature
 
-        // Delay initialization of musicToggleBtn and audio element until DOM is loaded
-        window.addEventListener('DOMContentLoaded', () => {
-            const musicToggleBtn = document.getElementById('musicToggleBtn');
-            const backgroundMusic = document.getElementById('backgroundMusic');
+  // Combine romantic and motivational quotes into one array for quote of the day
+  const allQuotes = romanticQuotes.concat(motivationalQuotes);
 
-            function updateMusicToggleBtn() {
-                if (!musicPlaying) {
-                    musicToggleBtn.innerHTML = '&#9658;'; // Play icon
-                    musicToggleBtn.title = 'Play Music';
-                } else if (musicMuted) {
-                    musicToggleBtn.innerHTML = '&#128263;'; // Muted speaker icon
-                    musicToggleBtn.title = 'Unmute Music';
-                } else {
-                    musicToggleBtn.innerHTML = '&#128266;'; // Speaker with sound icon
-                    musicToggleBtn.title = 'Mute Music';
-                }
-            }
+  // Function to get current date in IST timezone (yyyy-mm-dd)
+  function getCurrentISTDate() {
+    const now = new Date();
+    // Convert to UTC+5:30
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const istOffset = 5.5 * 60 * 60000;
+    const istTime = new Date(utc + istOffset);
+    return istTime.toISOString().split('T')[0]; // yyyy-mm-dd
+  }
 
-            function toggleMusic() {
-                console.log('toggleMusic called. musicPlaying:', musicPlaying, 'musicMuted:', musicMuted);
-                if (!musicPlaying) {
-                    backgroundMusic.muted = false;
-                    backgroundMusic.volume = 1.0;
-                    backgroundMusic.play().then(() => {
-                        console.log('Background music playing');
-                    }).catch(err => {
-                        console.error('Error playing background music:', err);
-                    });
-                    musicPlaying = true;
-                    musicMuted = false;
-                } else if (!musicMuted) {
-                    console.log('Muting music');
-                    backgroundMusic.muted = true;
-                    backgroundMusic.volume = 0;
-                    musicMuted = true;
-                } else {
-                    console.log('Unmuting music');
-                    backgroundMusic.muted = false;
-                    backgroundMusic.volume = 1.0;
-                    musicMuted = false;
-                }
-                updateMusicToggleBtn();
-            }
+  // Function to get quote of the day index based on date
+  function getQuoteOfTheDayIndex(dateStr) {
+    // Use a simple hash function on date string to get a deterministic index
+    let hash = 0;
+    for (let i = 0; i < dateStr.length; i++) {
+      hash = (hash << 5) - hash + dateStr.charCodeAt(i);
+      hash |= 0; // Convert to 32bit integer
+    }
+    // Ensure positive index and cycle through allQuotes length
+    return Math.abs(hash) % allQuotes.length;
+  }
 
-            musicToggleBtn.addEventListener('click', toggleMusic);
+  // Function to show quote of the day modal
+  function showQuoteOfTheDay() {
+    const dateStr = getCurrentISTDate();
+    const index = getQuoteOfTheDayIndex(dateStr);
+    const quoteData = allQuotes[index];
 
-            // Initialize button state
-            updateMusicToggleBtn();
-        });
+    // Create modal elements if not exist
+    let modal = document.getElementById('quoteOfDayModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'quoteOfDayModal';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+      modal.style.display = 'flex';
+      modal.style.justifyContent = 'center';
+      modal.style.alignItems = 'center';
+      modal.style.zIndex = '3000';
 
-        function setMode(mode) {
-            currentMode = mode;
-            document.body.className = mode;
-            const background = document.getElementById('backgroundLayer');
-            background.innerHTML = mode === 'romantic' ? generatePetals() : generateEmbers();
+      const content = document.createElement('div');
+      content.style.backgroundColor = 'white';
+      content.style.padding = '20px';
+      content.style.borderRadius = '10px';
+      content.style.maxWidth = '600px';
+      content.style.textAlign = 'center';
+      content.style.position = 'relative';
 
-            // Play corresponding background music
-            const romanticMusic = document.getElementById('romanticMusic');
-            const motivationalMusic = document.getElementById('motivationalMusic');
-            romanticMusic.pause();
-            motivationalMusic.pause();
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '×';
+      closeBtn.style.position = 'absolute';
+      closeBtn.style.top = '10px';
+      closeBtn.style.right = '10px';
+      closeBtn.style.fontSize = '24px';
+      closeBtn.style.border = 'none';
+      closeBtn.style.background = 'none';
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.setAttribute('aria-label', 'Close quote of the day modal');
+      closeBtn.onclick = () => {
+        modal.style.display = 'none';
+      };
 
-            if (mode === 'romantic') {
-                romanticMusic.play();
-            } else if (mode === 'motivational') {
-                motivationalMusic.play();
-            }
+      const quoteText = document.createElement('p');
+      quoteText.id = 'quoteOfDayText';
+      quoteText.style.fontSize = '1.5em';
+      quoteText.style.fontStyle = 'italic';
+      quoteText.style.marginBottom = '10px';
 
-            newQuote();
-        }
+      const authorText = document.createElement('p');
+      authorText.id = 'quoteOfDayAuthor';
+      authorText.style.fontWeight = 'bold';
 
-        // Add event listener to enable audio on first user interaction
-        window.addEventListener('click', enableAudio, { once: true });
-        window.addEventListener('keydown', enableAudio, { once: true });
+      content.appendChild(closeBtn);
+      content.appendChild(quoteText);
+      content.appendChild(authorText);
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+    }
 
-        function generatePetals() {
-            let petals = '';
-            for (let i = 0; i < 30; i++) {
-                const left = Math.random() * 100;
-                const delay = Math.random() * 10;
-                const size = 24 + Math.random() * 10;
-                petals += `<div class='petal' style='left:${left}%; animation-delay:${delay}s; width:${size}px; height:${size}px;'></div>`;
-            }
-            return petals;
-        }
+    // Set quote text and author
+    document.getElementById('quoteOfDayText').textContent = `"${quoteData.quote}"`;
+    document.getElementById('quoteOfDayAuthor').textContent = `— ${quoteData.author}`;
 
-        function generateEmbers() {
-            let embers = '';
-            for (let i = 0; i < 30; i++) {
-                const left = Math.random() * 100;
-                const delay = Math.random() * 10;
-                embers += `<div class='ember' style='left:${left}%; animation-delay:${delay}s;'></div>`;
-            }
-            return embers;
-        }
+    modal.style.display = 'flex';
+  }
 
-        function saveFavourite() {
-            const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
-            const newFav = { quote: document.getElementById('quote').textContent, author: document.getElementById('author').textContent };
-            favs.push(newFav);
-            localStorage.setItem('favourites', JSON.stringify(favs));
-            alert('Saved to favourites!');
-        }
+  // Fix: Update quote of the day when mode changes to motivational
+  function updateQuoteOfTheDay() {
+    const dateStr = getCurrentISTDate();
+    const index = getQuoteOfTheDayIndex(dateStr);
+    const quoteData = allQuotes[index];
+    const modalQuoteText = document.getElementById('quoteOfDayText');
+    const modalAuthorText = document.getElementById('quoteOfDayAuthor');
+    if (modalQuoteText && modalAuthorText) {
+      modalQuoteText.textContent = `"${quoteData.quote}"`;
+      modalAuthorText.textContent = `— ${quoteData.author}`;
+    }
+  }
 
-        function viewFavourites() {
-            const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
-            const list = document.getElementById('favouritesList');
-            list.innerHTML = '';
-            if (favs.length === 0) {
-                list.innerHTML = '<li>No favourites saved yet.</li>';
-            } else {
-                favs.forEach(f => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `${f.quote} <br><strong>${f.author}</strong>`;
-                    list.appendChild(li);
-                });
-            }
-            document.getElementById('favouritesModal').style.display = 'flex';
-            trapFocus(document.getElementById('favouritesModal'));
-        }
+  // Enhanced button interactions with ripple effect
+  function createRipple(event) {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.classList.add('ripple');
+    
+    button.appendChild(ripple);
+    
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  }
 
-        function closeFavourites() {
-            document.getElementById('favouritesModal').style.display = 'none';
-        }
+  // Add ripple effect to all buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.controls button, .mode-switch button, .music-btn');
+    buttons.forEach(button => {
+      button.addEventListener('click', createRipple);
+    });
+  });
 
-        function clearFavourites() {
-            if (confirm("Are you sure you want to delete all saved quotes?")) {
-                localStorage.removeItem('favourites');
-                alert('All favourites cleared.');
-            }
-        }
+  // Enhanced hover effects for social media links
+  document.addEventListener('DOMContentLoaded', function() {
+    const socialLinks = document.querySelectorAll('a[href^="http"], a[href^="mailto"]');
+    socialLinks.forEach(link => {
+      link.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.1) rotate(2deg)';
+        this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      });
+      
+      link.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1) rotate(0deg)';
+      });
+    });
+  });
 
-        // Accessibility: Focus management and keyboard navigation for modal
-        let lastFocusedElement;
-
-        function trapFocus(element) {
-            const focusableElements = element.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
-            const firstFocusable = focusableElements[0];
-            const lastFocusable = focusableElements[focusableElements.length - 1];
-
-            element.addEventListener('keydown', function (e) {
-                const isTabPressed = (e.key === 'Tab' || e.keyCode === 9);
-
-                if (!isTabPressed) {
-                    return;
-                }
-
-                if (e.shiftKey) {
-                    if (document.activeElement === firstFocusable) {
-                        lastFocusable.focus();
-                        e.preventDefault();
-                    }
-                } else {
-                    if (document.activeElement === lastFocusable) {
-                        firstFocusable.focus();
-                        e.preventDefault();
-                    }
-                }
-            });
-        }
-
-        function downloadAsImage() {
-            html2canvas(document.getElementById('quoteBox')).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'quote.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        }
-
-        function generateShareCard() {
-            const text = `${document.getElementById('quote').textContent} ${document.getElementById('author').textContent}`;
-            if (navigator.share) {
-                navigator.share({ text });
-            } else {
-                navigator.clipboard.writeText(text);
-                alert('Quote copied to clipboard!');
-            }
-        }
-
-        window.onload = () => setMode('romantic');
-
-        // Removed accessibility and modal related code for favourites feature
-
-    </script>
+</script>
 </body>
 
 </html>
